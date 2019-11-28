@@ -14,4 +14,4 @@ class SignUpParam(DomainBase):
 
 class SendSmsParam(DomainBase):
     phone = DomainAttr(True, str)
-    checkExist = DomainAttr(True, bool)
+    checkExist = DomainAttr(False, bool)

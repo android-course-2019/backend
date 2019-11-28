@@ -9,6 +9,8 @@ class DomainBase:
             if param[0] not in src:
                 if param[1].require:
                     raise RequiredParamNotFoundException()
+                else:
+                    self.__setattr__(param[0], None)
             else:
                 self.__setattr__(param[0], src[param[0]])
 

@@ -5,7 +5,7 @@ from enum import Enum
 from application.domains.base import DomainBase, RequiredParamNotFoundException
 
 
-class BaseErrorCode(Enum):
+class BaseWrongCode(Enum):
     pass
 
 
@@ -34,7 +34,7 @@ def __get_filtered_params(src, param_type: type):
         return None
 
 
-def make_error_response(error: BaseErrorCode):
+def make_error_response(error: BaseWrongCode):
     payload = {
         "code": error.value[0],
         "message": error.value[1]

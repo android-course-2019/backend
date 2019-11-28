@@ -1,37 +1,40 @@
-from application.database.models import User
+from enum import Enum
 from application.services.sms import send_sms
 from application.services.redis import redis
 
 
-def send_validate_code(phone, check_exist=False):
-    if not isinstance(phone, str) or len(phone) != 11:
-        return False, "Argument 'phone' invalid. Got: {}".format(phone)
+class ValidateCodeError(Enum):
+    ARGUMENT_INVALID = -1
+    SERVICE_UNAVAILABLE = -2
+    CODE_NOT_SENT = -3
+    WRONG_CODE = -4
 
-    if check_exist:
-        result = User.query.filter_by(phone=phone).all()
-        if len(result) != 0:
-            return False, "Phone num already exists!"
+
+def send_validate_code(phone):
+    if not isinstance(phone, str) or len(phone) != 11:
+        return ValidateCodeError.ARGUMENT_INVALID
 
     success, result = send_sms(phone)
     if success:
         redis.set("{}_validate".format(phone), str(result), ex=300)
     else:
-        return False, "Sms service Error. Detail: {}".format(result)
+        return ValidateCodeError.SERVICE_UNAVAILABLE
+    return True
 
 
 def check_validate_code(phone, valid_code):
     if not isinstance(phone, str) or len(phone) != 11:
-        return False, "Argument 'phone' invalid. Got: {}".format(phone)
+        return ValidateCodeError.ARGUMENT_INVALID
 
     if not isinstance(valid_code, str) or len(valid_code) != 6:
-        return False, "Argument 'phone' invalid. Got: {}".format(valid_code)
+        return ValidateCodeError.ARGUMENT_INVALID
 
     key = "{}_validate".format(phone)
 
     if key not in redis:
-        return False, "Validate code not set."
+        return ValidateCodeError.CODE_NOT_SENT
 
-    if redis.get(key) != valid_code:
-        return False, "Wrong validate code."
+    if str(redis.get(key), encoding='utf-8') != valid_code:
+        return ValidateCodeError.WRONG_CODE
 
     return True

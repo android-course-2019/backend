@@ -18,7 +18,7 @@ class Poster(db.Model):
     location_latitude = Column(DOUBLE, nullable=True)
 
     sendById = Column(BIGINT, ForeignKey("User.userId"), nullable=False)
-    sendBy = relationship("User", back_populates=None)
+    sendBy = relationship("User", back_populates="posters")
 
     drinks = relationship("PosterDrink")
     images = relationship("PosterImage")

@@ -8,7 +8,7 @@ from datetime import datetime
 from hashlib import sha1
 from urllib.parse import urlencode, quote_plus
 
-from application.config.private_data import sms_service_info
+from config.private_data import sms_service_info
 
 
 def send_sms(phone):
@@ -27,7 +27,7 @@ def send_sms(phone):
         "Version": "2017-05-25",
         "RegionId": "cn-hangzhou",
         "PhoneNumbers": phone,
-        "SignName": "yh0x13f",
+        "SignName": "0x13f小站",
         "TemplateCode": "SMS_175541886",
         "TemplateParam": "{{\"code\":\"{}\"}}".format(code)
     }

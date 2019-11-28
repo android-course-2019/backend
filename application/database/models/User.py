@@ -3,7 +3,7 @@ from sqlalchemy import Column, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import VARCHAR, BIGINT, CHAR, TINYINT, TIMESTAMP
 
-from application.config.private_data import db_password_salt
+from config.private_data import db_password_salt
 from application.database import db
 from application.database.models import *
 from application.database.relations import *
@@ -13,7 +13,6 @@ class User(db.Model):
     __tablename__ = 'User'
     userId = Column(BIGINT, primary_key=True, unique=True,
                     autoincrement=True, nullable=False)
-    userName = Column(VARCHAR(32), unique=True, nullable=False)
     password = Column(CHAR(32), nullable=False)
     phone = Column(CHAR(11), unique=True, nullable=False)
     nickName = Column(VARCHAR(32), nullable=True)
@@ -21,13 +20,13 @@ class User(db.Model):
     gender = Column(TINYINT, nullable=True)
     createTime = Column(TIMESTAMP, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
 
-    posters = relationship("Poster", backref="sendBy", lazy=True)
+    posters = relationship("Poster", back_populates="sendBy", lazy=True)
     collectDrinks = relationship("Drink", secondary=DrinkCollect, lazy=True)
-    follower = relationship("User", secondary=UserFollow,
-                            secondaryjoin="User.userId==UserFollow.followeeId",
+    follower = relationship("User", secondary=UserFollow, foreign_keys=[UserFollow.c.followeeId],
+                            secondaryjoin="User.userId==UserFollow.c.followeeId",
                             back_populates="followee", lazy=True)
-    followee = relationship("User", secondary=UserFollow,
-                            secondaryjoin="User.userId==UserFollow.followerId",
+    followee = relationship("User", secondary=UserFollow, foreign_keys=[UserFollow.c.followerId],
+                            secondaryjoin="User.userId==UserFollow.c.followerId",
                             back_populates="follower", lazy=True)
     likedPosters = relationship("Poster", secondary=PosterLike,
                                 back_populates="likedBy", lazy=True)

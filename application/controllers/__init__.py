@@ -1,1 +1,1 @@
-__all__ = ['hello_world_controller', 'login_controller']
+__all__ = ['hello_world_controller', 'auth_controller', 'poster_controller', 'user_controller']

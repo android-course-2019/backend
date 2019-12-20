@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import VARCHAR, BIGINT
 
 from application.database import db
-from application.database.models import *
 
 
 class Drink(db.Model):
@@ -22,3 +21,11 @@ class Drink(db.Model):
 
     def __repr__(self):
         return self.__str__()
+
+    def to_json_adaptable(self):
+        return {
+            "drinkId": self.drinkId,
+            "drinkName": self.drinkName,
+            "description": self.description,
+            "brand": self.brand.to_json_adaptable()
+        }

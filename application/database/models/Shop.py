@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import VARCHAR, DOUBLE, BIGINT
 
 from application.database import db
-from application.database.models import *
 
 
 class Shop(db.Model):
@@ -17,3 +16,13 @@ class Shop(db.Model):
     brandId = Column(BIGINT, ForeignKey('Brand.brandId'), nullable=False)
     brand = relationship("Brand",
                          back_populates="shops")
+
+    def to_json_adaptable(self):
+        return {
+            "shopName": self.shopName,
+            "address": self.address,
+            "location": {
+                "long": self.location_longitude,
+                "lat": self.location_latitude
+            }
+        }

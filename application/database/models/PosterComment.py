@@ -1,8 +1,8 @@
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.dialects.mysql import VARCHAR, BIGINT
-from application.database import db
 
+from application.database import db
 from application.database.models import *
 
 
@@ -19,3 +19,13 @@ class PosterComment(db.Model):
     replyCommentId = Column(BIGINT, ForeignKey("PosterComment.commentId"), nullable=True)
     replies = relationship("PosterComment",
                            backref=backref("replyComment", remote_side=[commentId]))
+
+    def to_json_adaptable(self):
+        res = {
+            "commentId": self.commentId,
+            "content": self.content,
+            "posterId": self.posterId
+        }
+        if self.replyCommentId is not None:
+            res["replyCommentId"] = self.replyCommentId
+        return res

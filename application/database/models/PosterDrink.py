@@ -2,7 +2,6 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import BIGINT, VARCHAR
 from application.database import db
-from application.database.models import *
 
 
 class PosterDrink(db.Model):
@@ -17,3 +16,14 @@ class PosterDrink(db.Model):
 
     drinkId = Column(BIGINT, ForeignKey("Drink.drinkId"), nullable=True)
     drink = relationship("Drink")
+
+    def to_json_adaptable(self):
+        res = {
+            "posterDrinkId": self.posterDrinkId,
+            "posterId": self.posterId
+        }
+        if self.drinkId is not None:
+            res["drink"] = self.drink.to_json_adaptable()
+        else:
+            res["drink"] = self.drinkName
+        return res

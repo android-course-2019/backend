@@ -2,7 +2,6 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.mysql import BIGINT
 
 from application.database import db
-from application.database.models import *
 
 
 PosterLike = db.Table(

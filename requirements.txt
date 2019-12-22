@@ -1,3 +1,4 @@
+oss2
 Click
 Flask
 Flask-SQLAlchemy

@@ -21,8 +21,5 @@ class Shop(db.Model):
         return {
             "shopName": self.shopName,
             "address": self.address,
-            "location": {
-                "long": self.location_longitude,
-                "lat": self.location_latitude
-            }
+            "location": [self.location_longitude, self.location_latitude]
         }

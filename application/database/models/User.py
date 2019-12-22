@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import VARCHAR, BIGINT, CHAR, TINYINT, TIMESTAMP
 
 from application.database import db
-from application.database.models import *
+from .Message import Message
 from application.database.relations import *
 from config.private_data import db_password_salt
 
@@ -16,7 +16,8 @@ class User(db.Model):
     password = Column(CHAR(32), nullable=False)
     phone = Column(CHAR(11), unique=True, nullable=False)
     nickName = Column(VARCHAR(32), nullable=True)
-    avatarUrl = Column(VARCHAR(128), nullable=True)
+    avatarUrl = Column(VARCHAR(128), nullable=False,
+                       default=text("https://oss.yh0x13f.cn/androidcourse/avatar/defaultAvatar.png"))
     gender = Column(TINYINT, nullable=True)
     createTime = Column(TIMESTAMP, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
 
@@ -28,6 +29,10 @@ class User(db.Model):
     followee = relationship("User", secondary=UserFollow, foreign_keys=[UserFollow.c.followerId],
                             secondaryjoin="User.userId==UserFollow.c.followerId",
                             back_populates="follower", lazy='dynamic')
+    sentMessages = relationship("Message", lazy="dynamic",
+                                back_populates="sender", foreign_keys=[Message.senderId])
+    receivedMessages = relationship("Message", lazy="dynamic",
+                                    back_populates="receiver", foreign_keys=[Message.receiverId])
     likedPosters = relationship("Poster", secondary=PosterLike,
                                 back_populates="likedBy", lazy='dynamic')
 

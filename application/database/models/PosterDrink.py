@@ -18,12 +18,9 @@ class PosterDrink(db.Model):
     drink = relationship("Drink")
 
     def to_json_adaptable(self):
-        res = {
-            "posterDrinkId": self.posterDrinkId,
-            "posterId": self.posterId
-        }
         if self.drinkId is not None:
-            res["drink"] = self.drink.to_json_adaptable()
+            return self.drink.to_json_adaptable()
         else:
-            res["drink"] = self.drinkName
-        return res
+            return {
+                "drinkName": self.drinkName
+            }

@@ -12,7 +12,7 @@ from application.services.validate_code import send_validate_code, check_validat
 def login(param: LoginParam):
     tmp_user = User(phone=param.phone, password=param.password)
     res = User.query.filter(User.phone == tmp_user.phone).first()
-    if res.first() is None:
+    if res is None:
         return make_error_response(WrongCode.LOGIN_MISMATCH)
     if tmp_user.password != res.password:
         return make_error_response(WrongCode.LOGIN_MISMATCH)

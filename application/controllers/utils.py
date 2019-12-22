@@ -8,6 +8,7 @@ class WrongCode(Enum):
     GENERAL_ERROR = (-200, "Some error occurred.")
     INVALID_ARG = (-201, "Invalid arguments.")
     INVALID_PAGING_OFFSET = (-202, "Paging offset beyond record num.")
+    ID_NOT_FOUND = (-203, "Record with given id not found.")
     LOGIN_MISMATCH = (-211, "Mismatch for phone and password.")
     PHONE_EXIST = (-212, "Phone already used.")
     PHONE_NOT_EXIST = (-213, "Phone should exist but not.")

@@ -6,7 +6,8 @@ from .Poster import Poster
 from .PosterComment import PosterComment
 from .PosterDrink import PosterDrink
 from .PosterImage import PosterImage
+from .Message import Message
 
 __all__ = ["User", "Brand", "Shop",
-           "Drink",
+           "Drink", "Message",
            "Poster", "PosterComment", "PosterDrink", "PosterImage"]

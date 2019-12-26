@@ -76,11 +76,12 @@ def make_paging_response(sorted_query_object, start, size=None):
     total_num = sorted_query_object.count()
     if start >= total_num:
         return make_error_response(WrongCode.INVALID_PAGING_OFFSET)
+
     payload = {
         "start": start,
         "size": size,
         "total_num": total_num,
-        "next": -1 if start + size >= total_num else start + size,
+        "next": -1 if ((size is None) or (start + size >= total_num)) else start + size,
         "data":
             [item.to_json_adaptable() for item in sorted_query_object.offset(start).limit(size).all()]
             if size is not None else

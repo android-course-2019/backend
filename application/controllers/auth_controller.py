@@ -35,7 +35,7 @@ def sign_up(param: SignUpParam):
         elif res == ValidateCodeError.CODE_NOT_SENT or res == ValidateCodeError.WRONG_CODE:
             return make_error_response(WrongCode.WRONG_CODE)
     else:
-        new_user = User(phone=param.phone, password=param.password)
+        new_user = User(phone=param.phone, password=param.password, nickName=param.nickName)
         db.session.add(new_user)
         db.session.commit()
         session['userId'] = new_user.userId
@@ -60,3 +60,11 @@ def send_sms(param: SendSmsParam):
             return make_error_response(WrongCode.GENERAL_ERROR)
     else:
         return make_success_response('ok')
+
+
+@app.route('/auth/logout', methods=['POST'])
+def logout():
+    if session.get('userId') is None:
+        return make_error_response(WrongCode.NOT_LOGGED)
+    session.pop('userId')
+    return make_success_response('ok')

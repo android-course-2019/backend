@@ -19,3 +19,12 @@ class Message(db.Model):
 
     receiverId = Column(BIGINT, ForeignKey("User.userId"), nullable=True)
     receiver = relationship("User", foreign_keys=[receiverId], back_populates="receivedMessages")
+
+    def to_json_adaptable(self):
+        return {
+            "messageId": self.messageId,
+            "sendTime": self.sendTime.timestamp(),
+            "content": self.content,
+            "senderId": self.senderId,
+            "receiverId": self.receiverId
+        }

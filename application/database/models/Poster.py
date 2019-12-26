@@ -24,7 +24,7 @@ class Poster(db.Model):
     images = relationship("PosterImage", back_populates="poster")
     comments = relationship("PosterComment", back_populates="poster", lazy=True)
     likedBy = relationship("User", secondary=PosterLike,
-                           back_populates="likedPosters", lazy=True)
+                           back_populates="likedPosters", lazy='dynamic')
 
     def __str__(self):
         return "<Poster id '{}' send by {}>".format(self.posterId, self.sendBy)
@@ -42,5 +42,5 @@ class Poster(db.Model):
             "drinks": [x.to_json_adaptable() for x in self.drinks],
             "images": [x.to_json_adaptable() for x in self.images],
             "comments": [x.to_json_adaptable() for x in self.comments],
-            "likedNum": len(self.likedBy)
+            "likedNum": self.likedBy.count()
         }

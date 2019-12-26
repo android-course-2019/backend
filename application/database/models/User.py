@@ -17,7 +17,7 @@ class User(db.Model):
     phone = Column(CHAR(11), unique=True, nullable=False)
     nickName = Column(VARCHAR(32), nullable=True)
     avatarUrl = Column(VARCHAR(128), nullable=False,
-                       default=text("https://oss.yh0x13f.cn/androidcourse/avatar/defaultAvatar.png"))
+                       default="https://oss.yh0x13f.cn/androidcourse/avatar/defaultAvatar.png")
     gender = Column(TINYINT, nullable=True)
     createTime = Column(TIMESTAMP, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
 
@@ -50,6 +50,7 @@ class User(db.Model):
 
     def to_json_adaptable(self):
         return {
+            "userId": self.userId,
             "phone": self.phone[:3] + "****" + self.phone[-4:],
             "nickName": self.nickName,
             "avatarUrl": self.avatarUrl,

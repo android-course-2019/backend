@@ -10,6 +10,7 @@ class SignUpParam(DomainBase):
     phone = DomainAttr(True, str)
     password = DomainAttr(True, str)
     validateCode = DomainAttr(True, str)
+    nickName = DomainAttr(True, str)
 
 
 class SendSmsParam(DomainBase):

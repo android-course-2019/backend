@@ -4,7 +4,7 @@ from application.database.models import *
 from .utils import *
 from sqlalchemy import func, or_, and_
 from application.database import db
-from application.domains.message import PagingMessage
+from application.domains.message import *
 
 
 @app.route('/message/my', methods=['GET'])
@@ -32,7 +32,7 @@ def get_my_message():
     return make_success_response(result)
 
 
-@app.route('/message/with/<int:counterpart_id>')
+@app.route('/message/with/<int:counterpart_id>', methods=['GET'])
 @check_param_from_query_param(PagingMessage)
 def get_message_history(param: PagingMessage, counterpart_id: int):
     if (user_id := session.get('userId')) is None:
@@ -44,3 +44,14 @@ def get_message_history(param: PagingMessage, counterpart_id: int):
                          Message.receiverId == user_id)))\
         .order_by(Message.sendTime)
     return make_paging_response(query, param.offset, param.size)
+
+
+@app.route('/message/send/<int:counterpart_id>', methods=['POST'])
+@check_param_from_req_body(SendMessage)
+def send_message(params: SendMessage, counterpart_id: int):
+    if (user_id := session.get('userId')) is None:
+        return make_error_response(WrongCode.NOT_LOGGED)
+    message = Message(senderId=user_id, receiverId=counterpart_id, content=params.content)
+    db.session.add(message)
+    db.session.commit()
+    return make_success_response('ok')
